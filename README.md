@@ -1,303 +1,175 @@
-Multithreaded Boids Simulation Benchmark
+# Boids Benchmark --- User Guide
 
-A C++ systems performance project that benchmarks a multithreaded implementation of the classic Boids flocking simulation using std::thread.
+This project is a **C++ boids simulation benchmark** with two modes:
 
-The project includes:
+1.  **Benchmark mode** --- runs the simulation headlessly and prints
+    performance results
+2.  **Visualization mode** --- opens a window and shows the boids moving
+    in real time
 
-A headless benchmarking mode for measuring performance scaling
+This guide walks you through using the program from scratch on Linux.
 
-A real-time visualization mode for observing simulation behavior
+------------------------------------------------------------------------
 
-CSV export for benchmark results
+# 1. Install Dependencies
 
-Python scripts for generating performance graphs
+You need:
 
-This project is designed to demonstrate multithreading, workload design, and performance analysis on modern CPUs.
+-   a C++ compiler
+-   CMake
+-   pkg-config
+-   SDL2
+-   SDL2_ttf
+-   Python 3
+-   matplotlib
 
-Demo
-Visualization Mode
+## Ubuntu / Debian
 
-Run the simulation interactively and observe the boids in real time.
-
-The overlay shows:
-
-Thread count
-
-Live FPS
-
-Example:
-
-./boids --visual --boids 2000 --thread-count 4
-Features
-Multithreaded Simulation
-
-Parallel boid updates using std::thread
-
-Work partitioned across boid ranges
-
-Deterministic double-buffered simulation state
-
-Performance Benchmarking
-
-Thread scaling tests
-
-Repeated runs for stable measurements
-
-Reports:
-
-Average frame time
-
-Throughput (boids/sec)
-
-Parallel speedup
-
-Parallel efficiency
-
-Data Analysis
-
-CSV export of benchmark results
-
-Python script for generating performance graphs
-
-Visualization Mode
-
-Real-time boid simulation
-
-Adjustable boid counts and thread counts
-
-Live FPS overlay
-
-Runs indefinitely until the window closes
-
-Repository Structure
-boids_benchmark/
-│
-├── CMakeLists.txt
-├── README.md
-│
-├── src/
-│   ├── main.cpp
-│   ├── boids.cpp
-│   ├── boids.h
-│   ├── benchmark.cpp
-│   ├── benchmark.h
-│   ├── visualizer.cpp
-│   └── visualizer.h
-│
-├── scripts/
-│   └── plot_results.py
-│
-├── data/        # CSV benchmark results
-├── plots/       # Generated graphs
-└── build/
-Requirements
-
-Linux environment with:
-
-C++17 compiler
-
-CMake ≥ 3.10
-
-SDL2
-
-SDL2_ttf
-
-Python 3
-
-matplotlib
-
-Install dependencies (Ubuntu/Debian):
-
+``` bash
 sudo apt update
 sudo apt install \
     build-essential \
     cmake \
+    pkg-config \
     libsdl2-dev \
     libsdl2-ttf-dev \
     python3 \
-    python3-matplotlib \
-    pkg-config
-Building
+    python3-matplotlib
+```
+------------------------------------------------------------------------
 
-Clone the repo and build using CMake.
+# 3. Build the Program
 
-git clone <repo-url>
-cd boids_benchmark
+Navigate to build directory:
 
-mkdir build
+``` bash
 cd build
+```
 
+Configure the project with CMake:
+
+``` bash
 cmake ..
+```
+
+Compile:
+
+``` bash
 make -j
+```
 
-This produces the executable:
+This will create the executable:
 
+``` bash
 ./boids
-Benchmark Mode
+```
 
-Runs a headless simulation and measures performance.
+------------------------------------------------------------------------
 
-Example:
+# 4. Confirm the Program Runs
 
-./boids \
-  --boids 4000 \
-  --steps 300 \
-  --repeats 5 \
-  --threads 1,2,4,8 \
-  --csv ../data/results.csv
+From inside the `build/` directory:
 
-Example output:
+``` bash
+./boids --help
+```
 
-Benchmark summary
-=================
-Threads: 1 | avg frame: 18.4 ms | throughput: 217k boids/sec | speedup: 1.0x
-Threads: 2 | avg frame: 10.1 ms | throughput: 395k boids/sec | speedup: 1.8x
-Threads: 4 | avg frame: 6.2 ms  | throughput: 641k boids/sec | speedup: 2.9x
-Threads: 8 | avg frame: 5.8 ms  | throughput: 682k boids/sec | speedup: 3.1x
+------------------------------------------------------------------------
 
-Metrics reported:
+# 5. Run Benchmark Mode
 
-Metric	Description
-Frame Time	Average simulation step time
-Throughput	Boids simulated per second
-Speedup	Relative to single-thread performance
-Efficiency	Speedup / thread count
-Visualization Mode
-
-Launch an interactive simulation window.
+Benchmark mode runs the simulation without graphics and measures
+performance.
 
 Example:
 
-./boids --visual --boids 2000 --thread-count 4
+``` bash
+./boids --boids 2000 --steps 200 --repeats 3 --threads 1,2,4
+```
 
-Options:
+Arguments:
 
-Option	Description
---visual	Run real-time visualization
---boids	Number of boids
---thread-count	Threads used for simulation
---width	Window width
---height	Window height
+-   `--boids` number of boids
+-   `--steps` number of simulation steps
+-   `--repeats` number of repeated benchmark runs
+-   `--threads` comma‑separated thread counts to test
 
-Notes:
+------------------------------------------------------------------------
 
-Visualization runs indefinitely
+# 6. Save Benchmark Results to CSV
 
---steps and CSV output are ignored in this mode
+Example:
 
-Generating Performance Graphs
+``` bash
+./boids --boids 4000 --steps 300 --repeats 5 --threads 1,2,4,8 --csv ../data/results.csv
+```
 
-After running benchmarks with CSV output:
+This creates:
 
-data/results.csv
+    data/results.csv
 
-Generate graphs:
+------------------------------------------------------------------------
 
+# 7. Generate Performance Graphs
+
+Return to the project root:
+
+``` bash
+cd ..
+```
+
+Run the plotting script:
+
+``` bash
 python3 scripts/plot_results.py data/results.csv
+```
 
-Output graphs appear in:
+Graphs will be generated in:
 
-plots/
+    plots/
 
-Graphs include:
+------------------------------------------------------------------------
 
-Frame time vs thread count
+# 8. Run Visualization Mode
 
-Throughput vs thread count
+Visualization mode runs the simulation in a window.
 
-Speedup scaling
+Example:
 
-Parallel efficiency
+``` bash
+cd build
+./boids --visual --boids 2000 --thread-count 4
+```
 
-Simulation Model
+Live metrics displayed:
 
-This project implements a simplified boids model using the cohesion rule:
+-   Thread count
+-   FPS
 
-Each boid steers toward the average position of nearby neighbors.
+------------------------------------------------------------------------
 
-Complexity:
+# 9. Customize Visualization
 
-O(N²)
+Example:
 
-This intentionally heavy workload makes it useful for CPU scaling experiments.
+``` bash
+./boids --visual --boids 5000 --thread-count 8 --width 1280 --height 720
+```
 
-The simulation uses:
+Arguments:
 
-Double-buffered state updates
+  Argument           Description
+  ------------------ -----------------------------
+  `--visual`         Enable visualization
+  `--boids`          Number of boids
+  `--thread-count`   Threads used for simulation
+  `--width`          Window width
+  `--height`         Window height
 
-Parallel partitioning across boid ranges
+Visualization runs until the window is closed.
 
-Read-only shared state per frame
+------------------------------------------------------------------------
 
-This ensures deterministic updates and avoids data races.
-
-Example Benchmark Workflow
-
-Run benchmark:
-
-./boids \
-  --boids 8000 \
-  --steps 200 \
-  --repeats 5 \
-  --threads 1,2,4,8,16 \
-  --csv ../data/scaling.csv
-
-Generate plots:
-
-python3 scripts/plot_results.py data/scaling.csv
-
-Analyze scaling behavior:
-
-diminishing returns after core count
-
-thread overhead
-
-memory bandwidth limits
-
-Future Improvements
-
-Potential extensions:
-
-Simulation
-
-alignment and separation rules
-
-spatial partitioning grid
-
-SIMD vectorization
-
-SoA memory layout
-
-Performance
-
-thread pools
-
-work stealing
-
-NUMA-aware partitioning
-
-Visualization
-
-directional boid triangles
-
-keyboard controls (pause/reset)
-
-real-time performance graphs
-
-Educational Value
-
-This project demonstrates key systems topics:
-
-multithreaded workload design
-
-CPU scaling analysis
-
-deterministic parallel simulation
-
-benchmark methodology
-
-visualization of parallel systems
-
-License
+# License
 
 MIT License
