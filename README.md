@@ -158,7 +158,6 @@ Example:
 
 Arguments:
 
-  Argument           Description
   ------------------ -----------------------------
   `--visual`         Enable visualization
   `--boids`          Number of boids
