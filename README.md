@@ -1,4 +1,4 @@
-# Boids Benchmark --- User Guide
+# Multithreaded Boids Benchmark --- User Guide
 
 This project is a **C++ boids simulation benchmark** with two modes:
 
