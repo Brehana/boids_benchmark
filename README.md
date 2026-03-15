@@ -9,6 +9,8 @@ This project is a **C++ boids simulation benchmark** with two modes:
 
 This guide walks you through using the program from scratch on Linux.
 
+[<video src="preview/preview.webm" width="998" height="701" controls></video>](https://github.com/user-attachments/assets/968ed43d-d87b-445b-9366-45e96eb6007b)
+
 ------------------------------------------------------------------------
 
 # 1. Install Dependencies
